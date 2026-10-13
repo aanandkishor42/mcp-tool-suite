@@ -54,7 +54,14 @@ async def load_text(source: str, *, timeout: float = 60.0) -> str:
         return text
 
     path = Path(source)
-    if path.exists() and path.is_file():
+    # A raw text blob (e.g. an email or a long document) may not be a valid path.
+    # On Linux, stat() on such a source raises OSError (ENAMETOOLONG, embedded
+    # null, ...) instead of simply returning False, so guard the probe.
+    try:
+        is_file = path.exists() and path.is_file()
+    except (OSError, ValueError):
+        is_file = False
+    if is_file:
         data = path.read_bytes()
         if path.suffix.lower() == ".pdf" or data[:4] == b"%PDF":
             return extract_pdf(data)
