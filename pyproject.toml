@@ -2,7 +2,7 @@
 mcp-tool-suite = "mcp_tool_suite.server:main"
 mcp-tool-suite-eval = "evals.run:main"
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,7 +11,7 @@ version = "0.1.0"
 description = "A multi-tool MCP server platform: one remote server, many AI-callable tools, pluggable into Claude, ChatGPT, VS Code and more."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "Aanand" }]
 dependencies = [
     "fastapi==0.143.0",
