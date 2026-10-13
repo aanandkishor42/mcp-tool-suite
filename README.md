@@ -219,7 +219,20 @@ pytest -q
 
 Tests run fully offline (fake LLM + hashing embeddings + in-memory vectors).
 
-## Docker
+
+## Evaluation
+
+Run offline evaluations of the RAG tools using the built-in harness:
+
+`powershell
+mcp-tool-suite-eval --samples evals/data/sample.json --output evals/results/latest.json
+# or
+python -m evals --samples evals/data/sample.json --output evals/results/latest.json
+`
+
+Results include keyword coverage, answered rate, and per-sample details. See evals/runner.py and evals/data/ for customization.
+
+
 
 ```powershell
 docker compose up --build        # http://localhost:8000/mcp
