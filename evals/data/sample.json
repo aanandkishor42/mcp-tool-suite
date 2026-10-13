@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "question": "What does the MCP Tool Suite do?",
+      "reference": "The MCP Tool Suite is a multi-tool MCP server platform that exposes many AI-callable tools over the Model Context Protocol, so a single server can be connected to multiple clients.",
+      "reference_contexts": [
+        "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
+      ]
+    },
+    {
+      "question": "What transports does it support?",
+      "reference": "Streamable HTTP (default) and stdio.",
+      "reference_contexts": [
+        "streamable-http (default) and stdio"
+      ]
+    },
+    {
+      "question": "Which auth modes are supported?",
+      "reference": "none, bearer, and oauth2.",
+      "reference_contexts": [
+        "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
+      ]
+    },
+    {
+      "question": "Which tools are included?",
+      "reference": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report.",
+      "reference_contexts": [
+        "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report"
+      ]
+    },
+    {
+      "question": "What providers does it use for LLMs and embeddings?",
+      "reference": "LLMs: groq, ollama, openai, anthropic, fake. Embeddings: ollama, openai, hashing.",
+      "reference_contexts": [
+        "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
+      ]
+    }
+  ]
+}
