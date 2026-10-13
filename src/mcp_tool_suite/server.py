@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 import uvicorn
+from mcp.server.apps import Apps
 from mcp.server.mcpserver import MCPServer
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -15,6 +16,7 @@ from mcp_tool_suite.config import Settings, get_settings
 from mcp_tool_suite.context import AppContext, build_context
 from mcp_tool_suite.registry import ToolRegistry
 from mcp_tool_suite.tools import default_plugins
+from mcp_tool_suite.tools.dashboard import DASHBOARD_HTML, DASHBOARD_URI
 
 INSTRUCTIONS = (
     "This server exposes a suite of document and knowledge tools. Typical flow: "
@@ -28,11 +30,24 @@ def build_registry() -> ToolRegistry:
     return ToolRegistry(default_plugins())
 
 
+def build_apps() -> Apps:
+    """The MCP Apps extension: serves the interactive usage dashboard widget."""
+    apps = Apps()
+    apps.add_html_resource(
+        DASHBOARD_URI,
+        DASHBOARD_HTML,
+        title="Usage dashboard",
+        description="Interactive view of tool/LLM call counts, latency and estimated cost.",
+    )
+    return apps
+
+
 def build_mcp_server(ctx: AppContext) -> MCPServer:
     server = MCPServer(
         name=ctx.settings.server_name,
         version=ctx.settings.server_version,
         instructions=INSTRUCTIONS,
+        extensions=[build_apps()],
     )
     build_registry().apply(server, ctx)
     return server

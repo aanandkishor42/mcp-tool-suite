@@ -204,7 +204,7 @@ src/mcp_tool_suite/
   auth/            bearer.py · tokens.py · store.py · routes.py · middleware.py
   context.py       dependency-injected AppContext
   registry.py      ToolRegistry + ToolPlugin protocol
-  server.py        MCPServer + Starlette app assembly
+  server.py        MCPServer + Starlette app assembly (incl. MCP Apps extension)
   providers/       base · openai_compatible · anthropic · fake · hashing · router
   services/        documents (load/chunk/html) · vectorstore · rag
                    · code_analysis (AST) · data_analysis (CSV) · email_analysis (MIME) · web (search)
@@ -282,6 +282,15 @@ small per-provider price table (local `ollama`/`fake` are free). Override prices
 for the active provider with `LLM_INPUT_PRICE_PER_1K` / `LLM_OUTPUT_PRICE_PER_1K`
 (USD per 1,000 tokens).
 
+### MCP Apps widget
+
+`usage_stats` is also an **MCP App** (`io.modelcontextprotocol/ui`): its
+`_meta.ui.resourceUri` points at the `ui://mcp-tool-suite/usage.html` resource, an
+interactive HTML dashboard the host renders in a sandboxed iframe. Hosts that
+support Apps render the widget; text-only clients get the plain text/Markdown
+answer, so the tool degrades gracefully (SEP-2133). Nothing else is required to
+enable it — the `Apps` extension is registered in `server.py:build_apps`.
+
 
 
 ```powershell
@@ -297,7 +306,7 @@ docker compose up --build        # http://localhost:8000/mcp
 - [x] Postgres + pgvector backend behind the `VectorStore` interface (`VECTOR_STORE=pgvector`)
 - [ ] Long-running work as MCP **Tasks** (e.g. expensive report generation)
 - [x] Usage/cost dashboard tool + stats endpoint
-- [ ] **MCP Apps** widgets for the usage/cost dashboard
+- [x] **MCP Apps** widget for the usage/cost dashboard (`io.modelcontextprotocol/ui`)
 - [x] Eval harness per tool (reusing the RAG-eval approach)
 - [x] Email assistant tool (draft · summarize · extract action items)
 

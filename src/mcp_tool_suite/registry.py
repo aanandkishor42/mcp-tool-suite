@@ -24,6 +24,10 @@ class ToolPlugin(Protocol):
 
     def create(self, ctx: AppContext) -> ToolCallable: ...
 
+    # A plugin may optionally define ``meta: dict[str, Any]`` to stamp ``_meta`` on
+    # the tool (e.g. MCP Apps ``{"ui": {"resourceUri": ...}}``); the registry reads
+    # it with ``getattr(plugin, "meta", None)``.
+
 
 def _tracked(name: str, fn: ToolCallable, ctx: AppContext) -> ToolCallable:
     """Wrap a tool callable so every invocation is recorded on ``ctx.usage``.
@@ -66,6 +70,7 @@ class ToolRegistry:
                 _tracked(plugin.name, callable_, ctx),
                 name=plugin.name,
                 description=plugin.description,
+                meta=getattr(plugin, "meta", None),
             )
             registered.append(plugin.name)
         return registered
