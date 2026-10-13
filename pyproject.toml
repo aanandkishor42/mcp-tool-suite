@@ -34,3 +34,8 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+[project.scripts]
+mcp-tool-suite = "mcp_tool_suite.server:main"
+mcp-tool-suite-eval = "evals.run:main"
+
