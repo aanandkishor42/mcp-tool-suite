@@ -2,8 +2,9 @@ FROM python:3.13-slim AS builder
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 WORKDIR /app
+COPY pyproject.toml ./
 COPY src ./src
-RUN pip install --no-cache-dir ".[dev]" \
+RUN pip install --no-cache-dir . \
     && pip wheel --no-deps --wheel-dir /wheels .
 FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=1 \
@@ -18,7 +19,6 @@ WORKDIR /app
 COPY --from=builder /wheels /wheels
 RUN pip install --no-cache-dir /wheels/*.whl
 COPY src ./src
-RUN if [ -f run.py ]; then cp run.py /app/run.py; fi
 RUN mkdir -p /data/index && chown -R appuser:appgroup /app /data
 USER appuser
 VOLUME ["/data"]
