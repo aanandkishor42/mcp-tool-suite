@@ -85,3 +85,9 @@ def build_embedding_provider(settings: Settings) -> EmbeddingProvider:
             timeout=timeout,
         )
     raise ValueError(f"Unknown embedding provider: {provider}")
+
+def build_llm(settings: Settings) -> LLMProvider:
+    return build_llm_provider(settings)
+def build_embedder(settings: Settings) -> EmbeddingProvider:
+    return build_embedding_provider(settings)
+
