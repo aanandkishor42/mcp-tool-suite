@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "mcp-tool-suite": {
+      "url": "https://your-deployed-host/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

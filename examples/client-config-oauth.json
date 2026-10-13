@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mcp-tool-suite-oauth": {
+      "url": "https://your-deployed-host/mcp",
+      "auth": "oauth"
+    }
+  }
+}
