@@ -32,6 +32,7 @@ handling, semantic search and a clean developer experience.
 | `web_research` | Search the web (DuckDuckGo, no API key), fetch pages, synthesize a cited summary |
 | `generate_report` | Write a structured Markdown report grounded in a collection and/or provided sources |
 | `email_assistant` | Draft email, summarize a mailbox, or extract action items/open questions from `.eml`/mbox text |
+| `usage_stats` | Report session tool/LLM call counts, latency and estimated USD cost (also at `GET /stats`) |
 
 Every tool is a plugin — see **Adding a tool**.
 
@@ -56,6 +57,9 @@ Then connect a client (see below) or smoke-test the protocol:
 ```powershell
 # Health + tool inventory
 curl http://localhost:8000/health
+
+# Usage/cost snapshot (tool + LLM call counts, latency, estimated cost)
+curl http://localhost:8000/stats
 ```
 
 ### Use a real model
@@ -204,8 +208,9 @@ src/mcp_tool_suite/
   providers/       base · openai_compatible · anthropic · fake · hashing · router
   services/        documents (load/chunk/html) · vectorstore · rag
                    · code_analysis (AST) · data_analysis (CSV) · email_analysis (MIME) · web (search)
+                   · usage (UsageTracker + TrackedLLMProvider)
   tools/           rag_tools · analyze · code_review · data_analysis · web_research · report · email
-                   (+ add your own)
+                   · dashboard (usage_stats) (+ add your own)
 docs/              connecting-clients.md (per-client setup)
 examples/          client-config*.json · oauth_flow.py
 ```
@@ -248,8 +253,8 @@ Run the offline, **per-tool** evaluation harness (fake LLM + hashing embeddings 
 no web search, so it needs no keys or network). Every tool is exercised with its
 own metrics — keyword coverage, answered rate and citation count for the RAG
 tools, static-analysis rule/severity matching for `review_code`, row/column shape
-checks for `analyze_data`, source counts for `web_research`/`generate_report`, and
-action-item extraction for `email_assistant`:
+checks for `analyze_data`, source counts for `web_research`/`generate_report`,
+action-item extraction for `email_assistant`, and usage totals for `usage_stats`:
 
 ```powershell
 mcp-tool-suite-eval --samples evals/data/sample.json --output evals/results/latest.json
@@ -261,6 +266,21 @@ Each sample in `evals/data/sample.json` declares its target `tool` (default
 `document_qa`) plus tool-specific `input` and `metadata` expectations. Results
 contain per-sample outputs and an `aggregate` block grouped `by_tool`. Add new
 evaluators in `evals/evaluators.py` and samples to the JSON to extend coverage.
+
+## Usage & cost
+
+Usage is tracked in-process for the lifetime of the server: every tool call
+(latency, success/error) and every LLM call (provider/model, estimated tokens,
+estimated USD cost). Read it two ways:
+
+* **MCP tool** `usage_stats` — callable by any client; returns structured totals
+  plus a Markdown dashboard.
+* **HTTP** `GET /stats` — the same summary as JSON.
+
+Token counts are estimated from character counts (`chars / 4`); cost comes from a
+small per-provider price table (local `ollama`/`fake` are free). Override prices
+for the active provider with `LLM_INPUT_PRICE_PER_1K` / `LLM_OUTPUT_PRICE_PER_1K`
+(USD per 1,000 tokens).
 
 
 
@@ -276,7 +296,7 @@ docker compose up --build        # http://localhost:8000/mcp
 - [x] OAuth 2.1 authorization + resource server (RFC 8414/7591/7636/8707/9728, PKCE, JWT, refresh rotation)
 - [x] Postgres + pgvector backend behind the `VectorStore` interface (`VECTOR_STORE=pgvector`)
 - [ ] Long-running work as MCP **Tasks** (e.g. expensive report generation)
-- [ ] Usage/cost dashboard tool + stats endpoint
+- [x] Usage/cost dashboard tool + stats endpoint
 - [ ] **MCP Apps** widgets for the usage/cost dashboard
 - [x] Eval harness per tool (reusing the RAG-eval approach)
 - [x] Email assistant tool (draft · summarize · extract action items)

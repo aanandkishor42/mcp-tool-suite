@@ -68,6 +68,10 @@ def build_http_app(settings: Settings | None = None) -> Any:
             }
         )
 
+    @server.custom_route("/stats", methods=["GET"])
+    async def stats(_: Request) -> JSONResponse:
+        return JSONResponse(ctx.usage.summary())
+
     # Custom routes must be registered before the app is materialised.
     app = server.streamable_http_app(
         streamable_http_path=settings.mcp_path,

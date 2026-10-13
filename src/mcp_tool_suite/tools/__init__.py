@@ -5,6 +5,7 @@ from __future__ import annotations
 from mcp_tool_suite.registry import ToolPlugin
 from mcp_tool_suite.tools.analyze import AnalyzeDocumentTool
 from mcp_tool_suite.tools.code_review import ReviewCodeTool
+from mcp_tool_suite.tools.dashboard import UsageStatsTool
 from mcp_tool_suite.tools.data_analysis import AnalyzeDataTool
 from mcp_tool_suite.tools.email import EmailAssistantTool
 from mcp_tool_suite.tools.rag_tools import (
@@ -24,6 +25,7 @@ __all__ = [
     "IndexDocumentTool",
     "ReviewCodeTool",
     "SemanticSearchTool",
+    "UsageStatsTool",
     "WebResearchTool",
     "default_plugins",
 ]
@@ -44,4 +46,6 @@ def default_plugins() -> list[ToolPlugin]:
         GenerateReportTool(),
         # Communication
         EmailAssistantTool(),
+        # Observability
+        UsageStatsTool(),
     ]

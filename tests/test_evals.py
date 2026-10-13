@@ -60,6 +60,7 @@ def test_registry_covers_every_tool():
         "web_research",
         "generate_report",
         "email_assistant",
+        "usage_stats",
     }
 
 

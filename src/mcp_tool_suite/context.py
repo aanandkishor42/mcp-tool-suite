@@ -8,6 +8,7 @@ from mcp_tool_suite.config import Settings, get_settings
 from mcp_tool_suite.providers.base import EmbeddingProvider, LLMProvider
 from mcp_tool_suite.providers.router import build_embedding_provider, build_llm_provider
 from mcp_tool_suite.services.rag import RagService
+from mcp_tool_suite.services.usage import TrackedLLMProvider, UsageTracker
 from mcp_tool_suite.services.vectorstore import InMemoryVectorStore, VectorStore
 from mcp_tool_suite.services.web import DuckDuckGoSearch, NullSearch, SearchProvider
 
@@ -20,6 +21,7 @@ class AppContext:
     store: VectorStore
     rag: RagService
     search: SearchProvider
+    usage: UsageTracker
 
 
 def build_search_provider(settings: Settings) -> SearchProvider:
@@ -49,7 +51,19 @@ def build_vector_store(settings: Settings, embedder: EmbeddingProvider) -> Vecto
 
 def build_context(settings: Settings | None = None) -> AppContext:
     settings = settings or get_settings()
-    llm = build_llm_provider(settings)
+    usage = UsageTracker()
+    if settings.llm_input_price_per_1k is not None or settings.llm_output_price_per_1k is not None:
+        default_input, default_output = usage.price_for(settings.llm_provider)
+        usage.set_prices(
+            settings.llm_provider,
+            settings.llm_input_price_per_1k
+            if settings.llm_input_price_per_1k is not None
+            else default_input,
+            settings.llm_output_price_per_1k
+            if settings.llm_output_price_per_1k is not None
+            else default_output,
+        )
+    llm = TrackedLLMProvider(build_llm_provider(settings), usage)
     embedder = build_embedding_provider(settings)
     store = build_vector_store(settings, embedder)
     rag = RagService(settings, llm, embedder, store)
@@ -61,4 +75,5 @@ def build_context(settings: Settings | None = None) -> AppContext:
         store=store,
         rag=rag,
         search=search,
+        usage=usage,
     )

@@ -23,9 +23,9 @@
     },
     {
       "question": "Which tools are included?",
-      "reference": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report.",
+      "reference": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report, email_assistant, usage_stats.",
       "reference_contexts": [
-        "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report"
+        "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report, email_assistant, usage_stats"
       ]
     },
     {
@@ -111,6 +111,11 @@
       "metadata": {
         "expected_action_items": ["send the release notes", "review the pricing page", "schedule a dry run"]
       }
+    },
+    {
+      "tool": "usage_stats",
+      "question": "Report session usage and estimated cost.",
+      "reference": "tool calls llm calls tokens estimated cost"
     }
   ]
 }

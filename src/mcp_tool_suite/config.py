@@ -81,6 +81,10 @@ class Settings(BaseSettings):
     pgvector_dsn: str | None = None  # postgresql://user:pass@host:5432/db
     pgvector_table: str = "mcp_vectors"
 
+    # Usage/cost estimation (USD per 1,000 tokens; None keeps the built-in default)
+    llm_input_price_per_1k: float | None = None
+    llm_output_price_per_1k: float | None = None
+
     def resolved_llm_model(self) -> str:
         return self.llm_model or DEFAULT_MODELS[self.llm_provider]
 

@@ -24,6 +24,7 @@ from mcp_tool_suite.tools import (
     GenerateReportTool,
     ReviewCodeTool,
     SemanticSearchTool,
+    UsageStatsTool,
     WebResearchTool,
 )
 
@@ -288,6 +289,25 @@ async def evaluate_email_assistant(ctx: AppContext, sample: EvalSample) -> dict[
     }
 
 
+async def evaluate_usage_stats(ctx: AppContext, sample: EvalSample) -> dict[str, Any]:
+    tool = UsageStatsTool().create(ctx)
+    out = await tool()
+    totals = out.get("totals", {})
+    return {
+        "output": {
+            "tool_calls": totals.get("tool_calls", 0),
+            "llm_calls": totals.get("llm_calls", 0),
+            "estimated_cost_usd": totals.get("estimated_cost_usd", 0.0),
+        },
+        "metrics": {
+            "has_totals": bool(totals),
+            "llm_calls": totals.get("llm_calls", 0),
+            "tool_calls": totals.get("tool_calls", 0),
+            "estimated_cost_usd": totals.get("estimated_cost_usd", 0.0),
+        },
+    }
+
+
 ToolEvaluator = Callable[[AppContext, EvalSample], Awaitable[dict[str, Any]]]
 
 TOOL_EVALUATORS: dict[str, ToolEvaluator] = {
@@ -299,6 +319,7 @@ TOOL_EVALUATORS: dict[str, ToolEvaluator] = {
     "web_research": evaluate_web_research,
     "generate_report": evaluate_generate_report,
     "email_assistant": evaluate_email_assistant,
+    "usage_stats": evaluate_usage_stats,
 }
 
 

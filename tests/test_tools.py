@@ -19,6 +19,7 @@ def test_default_plugins_have_names():
         "web_research",
         "generate_report",
         "email_assistant",
+        "usage_stats",
     ]
 
 
