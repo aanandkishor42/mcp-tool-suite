@@ -1,0 +1,13 @@
+services:
+  mcp-tool-suite:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      TRANSPORT: streamable-http
+    volumes:
+      - ./data:/data/index
+    restart: unless-stopped

@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-tool-suite"
+version = "0.1.0"
+description = "A multi-tool MCP server platform: one remote server, many AI-callable tools, pluggable into Claude, ChatGPT, VS Code and more."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Aanand" }]
+dependencies = [
+    "fastapi==0.143.0",
+    "uvicorn[standard]==0.54.0",
+    "mcp==2.3.0",
+    "pydantic==2.14.1",
+    "pydantic-settings==2.15.0",
+    "httpx==0.28.1",
+    "pypdf==6.20.1",
+    "numpy==2.5.4",
+    "python-dotenv==1.2.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+
+[project.scripts]
+mcp-tool-suite = "mcp_tool_suite.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
