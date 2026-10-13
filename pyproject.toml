@@ -1,3 +1,6 @@
+[project.scripts]
+mcp-tool-suite = "mcp_tool_suite.server:main"
+mcp-tool-suite-eval = "evals.run:main"
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -25,8 +28,6 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest==9.1.1"]
 
-[project.scripts]
-mcp-tool-suite = "mcp_tool_suite.server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -35,7 +36,4 @@ where = ["src"]
 pythonpath = ["src"]
 testpaths = ["tests"]
 
-[project.scripts]
-mcp-tool-suite = "mcp_tool_suite.server:main"
-mcp-tool-suite-eval = "evals.run:main"
 
