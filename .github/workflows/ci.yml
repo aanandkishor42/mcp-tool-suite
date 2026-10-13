@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: 1
+      LLM_PROVIDER: fake
+      EMBED_PROVIDER: hashing
+      WEB_SEARCH_PROVIDER: none
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Run tests
+        run: |
+          pytest -q
+      - name: Run offline eval
+        run: |
+          python -m evals.run --samples evals/data/sample.json --output evals/results/ci.json
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: evals/results/ci.json
+          retention-days: 7
