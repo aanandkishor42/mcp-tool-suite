@@ -32,7 +32,7 @@ the whole suite through a single remote server.
 - **MCP Tasks** (protocol `2025-11-25`): `web_research` and `generate_report`
   can run as background tasks via a task-augmented `tools/call`, with
   `tasks/get`, `tasks/list`, `tasks/cancel` and `tasks/result` support and an
-  in-process `TaskStore`.
+  in-process `TaskStore`; `tasks/cancel` stops the in-flight run.
 - **Evaluation harness:** per-tool offline evaluators, sample testset and
   `python -m evals` / `mcp-tool-suite-eval` entry points.
 - **Packaging & ops:** multi-stage non-root Docker image with healthcheck,

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+import types
 
 import mcp_types as t
 import mcp_types.methods as methods
@@ -135,6 +136,40 @@ def test_extension_handlers_reject_unknown_task():
         asyncio.run(ext._handle_result(None, t.GetTaskPayloadRequestParams(task_id="nope")))
     with pytest.raises(MCPError):
         asyncio.run(ext._handle_cancel(None, t.CancelTaskRequestParams(task_id="nope")))
+
+
+def test_cancel_stops_the_background_run():
+    started = None
+
+    async def scenario() -> None:
+        nonlocal started
+        started = asyncio.Event()
+
+        async def slow_tool(ctx, params):  # type: ignore[no-untyped-def]
+            started.set()
+            await asyncio.sleep(30)
+            return "unreachable"
+
+        ext = TasksExtension(["web_research"])
+        ext._server = types.SimpleNamespace(_handle_call_tool=slow_tool)
+
+        record = ext.store.create()
+        ext._spawn(record.task_id, ctx=None, params=None)
+        await started.wait()
+        runner = ext._runners[record.task_id]
+        assert not runner.done()
+
+        result = await ext._handle_cancel(
+            None, t.CancelTaskRequestParams(task_id=record.task_id)
+        )
+        assert result.status == "cancelled"
+        assert ext.store.get(record.task_id).status == "cancelled"
+
+        with pytest.raises(asyncio.CancelledError):
+            await runner
+        assert ext._runners.get(record.task_id) is None
+
+    asyncio.run(scenario())
 
 
 # --- server wiring -----------------------------------------------------------

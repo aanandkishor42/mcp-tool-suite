@@ -307,7 +307,7 @@ event loop. The client then drives the lifecycle with the standard task methods:
 | `tasks/get` | poll status (`working` → `completed`/`failed`/`cancelled`) |
 | `tasks/list` | enumerate live tasks |
 | `tasks/result` | fetch the final `CallToolResult` (errors until terminal) |
-| `tasks/cancel` | request cancellation (idempotent; terminal states are sticky) |
+| `tasks/cancel` | cancel the background run (idempotent; terminal states are sticky) |
 
 Tasks are held in an in-process `TaskStore` (`services/tasks.py`) and expire
 `tasks_default_ttl_ms` after they finish. Passing `task` to a non-task tool is

@@ -77,6 +77,8 @@ class TasksExtension(Extension):
         self._poll_interval_ms = poll_interval_ms
         self.store = TaskStore(default_ttl_ms=default_ttl_ms)
         self._server: Any = None
+        # Live background runs, keyed by task id, so `tasks/cancel` can stop them.
+        self._runners: dict[str, asyncio.Task[None]] = {}
 
     # -- extension surface ------------------------------------------------
 
@@ -129,9 +131,15 @@ class TasksExtension(Extension):
         return ListTasksResult(tasks=[record.to_wire() for record in self.store.list()])
 
     async def _handle_cancel(self, ctx: Any, params: CancelTaskRequestParams) -> CancelTaskResult:
-        record = self.store.cancel(params.task_id)
-        if record is None:
+        if self.store.get(params.task_id) is None:
             raise MCPError(code=INVALID_PARAMS, message=f"Unknown task: {params.task_id}")
+        record = self.store.cancel(params.task_id)
+        # Stop the background run too, not just the status flag. The runner's
+        # CancelledError handler also cancels the record (idempotent).
+        runner = self._runners.get(params.task_id)
+        if runner is not None and not runner.done():
+            runner.cancel()
+        assert record is not None
         return CancelTaskResult(**record.to_wire().model_dump())
 
     async def _handle_result(self, ctx: Any, params: GetTaskPayloadRequestParams) -> Any:
@@ -170,8 +178,9 @@ class TasksExtension(Extension):
     def _spawn(self, task_id: str, ctx: Any, params: CallToolRequestParams) -> None:
         """Run the tool in the background, independent of the request's scope."""
         loop = asyncio.get_running_loop()
-        task = loop.create_task(self._run(task_id, ctx, params))
-        task.add_done_callback(self._log_task_failure)
+        runner = loop.create_task(self._run(task_id, ctx, params))
+        self._runners[task_id] = runner
+        runner.add_done_callback(lambda finished: self._on_runner_done(task_id, finished))
 
     async def _run(self, task_id: str, ctx: Any, params: CallToolRequestParams) -> None:
         try:
@@ -185,11 +194,11 @@ class TasksExtension(Extension):
         else:
             self.store.complete(task_id, result)
 
-    @staticmethod
-    def _log_task_failure(task: "asyncio.Task[None]") -> None:
+    def _on_runner_done(self, task_id: str, runner: "asyncio.Task[None]") -> None:
+        self._runners.pop(task_id, None)
         # Retrieve the exception so asyncio does not warn about it going unread.
-        if not task.cancelled() and (exc := task.exception()) is not None:
-            logger.debug("background task ended with %r", exc)
+        if not runner.cancelled() and runner.exception() is not None:
+            logger.debug("background task %s ended with %r", task_id, runner.exception())
 
     # -- capability advertisement ----------------------------------------
 
