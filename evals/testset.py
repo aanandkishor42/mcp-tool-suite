@@ -8,13 +8,21 @@ from pydantic import BaseModel, Field
 
 
 class EvalSample(BaseModel):
-    """One question/answer test case for per-tool evaluation."""
+    """One test case for per-tool evaluation.
+
+    ``tool`` selects the evaluator (defaults to ``document_qa`` for backwards
+    compatibility with Q&A-only sample files). ``input`` carries that tool's
+    arguments; ``question`` doubles as the prompt/topic when no explicit input
+    is given. ``reference`` and ``metadata`` drive the offline metrics.
+    """
 
     question: str = Field(..., min_length=1)
     reference: str = Field(default="")
     reference_contexts: list[str] = Field(default_factory=list)
     collection: str = Field(default="evals")
     source: str | None = Field(default=None)
+    tool: str = Field(default="document_qa")
+    input: dict[str, Any] = Field(default_factory=dict)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
     @classmethod
@@ -25,6 +33,8 @@ class EvalSample(BaseModel):
             reference_contexts=[c for c in data.get("reference_contexts", []) if c],
             collection=data.get("collection", "evals"),
             source=data.get("source"),
+            tool=(data.get("tool") or "document_qa").strip(),
+            input=data.get("input") or {},
             metadata=data.get("metadata") or {},
         )
 

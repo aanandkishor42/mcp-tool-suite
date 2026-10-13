@@ -1,144 +1,84 @@
+"""Per-tool evaluation harness (like RAG-eval) for the MCP Tool Suite.
+
+Runs every sample through its target tool and aggregates offline quality signals
+(keyword coverage, answered rate, static-analysis/table checks, ...). Fully
+offline with the ``fake`` LLM, ``hashing`` embeddings and ``none`` search.
+
+Programmatic use:
+
+    from mcp_tool_suite.context import build_context
+    from evals.runner import PerToolEvaluator
+    from evals.testset import load_eval_samples
+
+    evaluator = PerToolEvaluator(build_context())
+    results = await evaluator.run(load_eval_samples(Path("evals/data/sample.json")))
+"""
+
 from __future__ import annotations
 
-import asyncio
-import json
-import statistics
-import time
-from pathlib import Path
 from typing import Any
 
-from mcp_tool_suite.config import Settings, get_settings
-from mcp_tool_suite.context import AppContext, build_context, build_vector_store
-from mcp_tool_suite.providers.router import build_embedder, build_llm
-from mcp_tool_suite.services.rag import RagService
-from mcp_tool_suite.tools.rag_tools import DocumentQaTool, SemanticSearchTool
+from mcp_tool_suite.context import AppContext
 
-from evals.testset import EvalSample, load_eval_samples
+from evals.evaluators import OfflineMetrics, evaluate_sample
+from evals.testset import EvalSample
+
+__all__ = ["PerToolEvaluator", "OfflineMetrics"]
 
 
-class OfflineMetrics:
-    @staticmethod
-    def keyword_coverage(reference: str, answer: str) -> float:
-        if not reference or not answer:
-            return 0.0
-        ref_terms = [t.lower() for t in reference.split() if len(t) > 3]
-        if not ref_terms:
-            return 0.0
-        ans_terms = answer.lower()
-        hits = sum(1 for t in set(ref_terms) if t in ans_terms)
-        return round(hits / max(1, len(set(ref_terms))), 4)
+def aggregate(results: list[dict[str, Any]]) -> dict[str, Any]:
+    """Summarise per-sample results, overall and grouped by tool."""
+    ok = [r for r in results if not r.get("error")]
+    coverage = [
+        r["metrics"]["keyword_coverage"]
+        for r in ok
+        if isinstance(r.get("metrics", {}).get("keyword_coverage"), (int, float))
+    ]
+    qa = [r for r in ok if r["tool"] == "document_qa"]
 
-    @staticmethod
-    def citation_count(citations: list[dict[str, Any]]) -> int:
-        return len(citations)
+    by_tool: dict[str, dict[str, Any]] = {}
+    for result in ok:
+        by_tool.setdefault(result["tool"], {"count": 0})
+        by_tool[result["tool"]]["count"] += 1
+    for tool, summary in by_tool.items():
+        rows = [r for r in ok if r["tool"] == tool]
+        numeric_keys = {
+            key
+            for r in rows
+            for key, value in r["metrics"].items()
+            if isinstance(value, (int, float)) and not isinstance(value, bool)
+        }
+        for key in sorted(numeric_keys):
+            values = [
+                r["metrics"][key]
+                for r in rows
+                if isinstance(r["metrics"].get(key), (int, float))
+                and not isinstance(r["metrics"].get(key), bool)
+            ]
+            if values:
+                summary[f"mean_{key}"] = round(sum(values) / len(values), 4)
 
-    @staticmethod
-    def has_answer(answer: str) -> bool:
-        if not answer:
-            return False
-        s = answer.lower()
-        return "i don't know" not in s and "no relevant" not in s and "not enough context" not in s
+    return {
+        "count": len(ok),
+        "error_count": len(results) - len(ok),
+        "mean_keyword_coverage": round(sum(coverage) / len(coverage), 4) if coverage else 0.0,
+        "answered_rate": (
+            round(sum(1 for r in qa if r["metrics"].get("has_answer")) / len(qa), 4)
+            if qa
+            else 0.0
+        ),
+        "by_tool": by_tool,
+    }
 
 
 class PerToolEvaluator:
     def __init__(self, ctx: AppContext) -> None:
         self.ctx = ctx
         self.settings = ctx.settings
-        self.llm = build_llm(self.settings)
-        self.embedder = build_embedder(self.settings)
-        self.store = build_vector_store(self.settings, self.embedder)
-        self.rag = RagService(self.settings, self.llm, self.embedder, self.store)
 
-    async def index_sample(self, sample: EvalSample) -> None:
-        if sample.source:
-            await self.rag.index(sample.collection, sample.source)
-            return
-        # Fallback: if no source, try to use reference_contexts concatenated
-        if sample.reference_contexts:
-            text = "\n\n".join(sample.reference_contexts)
-            await self.index_text(sample.collection, f"eval-{hash(sample.question)}", text)
-
-    async def index_text(self, collection: str, source: str, text: str) -> None:
-        from mcp_tool_suite.services.documents import chunk_text
-
-        chunks = chunk_text(
-            text,
-            size=self.settings.chunk_size,
-            overlap=self.settings.chunk_overlap,
-        )
-        if not chunks:
-            return
-        vectors = await self.embedder.embed(chunks)
-        ids = [f"{collection}-{self.store.count(collection) + i}" for i in range(len(chunks))]
-        metadatas = [{"source": source, "chunk_index": i} for i in range(len(chunks))]
-        self.store.add(collection, ids=ids, vectors=vectors, texts=chunks, metadatas=metadatas)
-
-    async def evaluate_document_qa(self, samples: list[EvalSample]) -> list[dict[str, Any]]:
-        results: list[dict[str, Any]] = []
-        tool = DocumentQaTool().create(self.ctx)
-        for s in samples:
-            await self.index_sample(s)
-            try:
-                res = await tool(question=s.question, collection=s.collection, top_k=4)
-                results.append(
-                    {
-                        "tool": "document_qa",
-                        "question": s.question,
-                        "reference": s.reference,
-                        "answer": res.get("answer", ""),
-                        "citations": res.get("citations", []),
-                        "keyword_coverage": OfflineMetrics.keyword_coverage(s.reference, res.get("answer", "")),
-                        "has_answer": OfflineMetrics.has_answer(res.get("answer", "")),
-                        "citation_count": OfflineMetrics.citation_count(res.get("citations", [])),
-                        "latency_ms": 0,
-                    }
-                )
-            except Exception as exc:  # pragma: no cover
-                results.append(
-                    {
-                        "tool": "document_qa",
-                        "question": s.question,
-                        "error": str(exc),
-                    }
-                )
-        return results
-
-    async def evaluate_semantic_search(self, samples: list[EvalSample]) -> list[dict[str, Any]]:
-        results: list[dict[str, Any]] = []
-        tool = SemanticSearchTool().create(self.ctx)
-        for s in samples:
-            await self.index_sample(s)
-            try:
-                res = await tool(query=s.question, collection=s.collection, top_k=4)
-                results.append(
-                    {
-                        "tool": "semantic_search",
-                        "question": s.question,
-                        "hits": res.get("hits", []),
-                        "hit_count": len(res.get("hits", [])),
-                    }
-                )
-            except Exception as exc:  # pragma: no cover
-                results.append(
-                    {
-                        "tool": "semantic_search",
-                        "question": s.question,
-                        "error": str(exc),
-                    }
-                )
-        return results
+    async def evaluate(self, sample: EvalSample) -> dict[str, Any]:
+        return await evaluate_sample(self.ctx, sample)
 
     async def run(self, samples: list[EvalSample]) -> dict[str, Any]:
-        qa = await self.evaluate_document_qa(samples)
-        return {
-            "samples": qa,
-            "aggregate": {
-                "count": len([r for r in qa if "error" not in r]),
-                "mean_keyword_coverage": round(
-                    statistics.mean([r["keyword_coverage"] for r in qa if "keyword_coverage" in r]) or 0, 4
-                ),
-                "answered_rate": round(
-                    sum(1 for r in qa if r.get("has_answer")) / max(1, len(qa)), 4
-                ),
-            },
-        }
+        results = [await self.evaluate(sample) for sample in samples]
+        return {"samples": results, "aggregate": aggregate(results)}

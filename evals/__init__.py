@@ -4,4 +4,6 @@ __all__ = [
     "save_eval_results",
     "PerToolEvaluator",
     "OfflineMetrics",
+    "evaluate_sample",
+    "TOOL_EVALUATORS",
 ]

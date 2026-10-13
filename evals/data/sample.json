@@ -34,6 +34,71 @@
       "reference_contexts": [
         "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
       ]
+    },
+    {
+      "tool": "semantic_search",
+      "question": "What transports does the server expose?",
+      "reference": "streamable-http and stdio",
+      "reference_contexts": [
+        "The server exposes streamable-http (default) and stdio transports."
+      ]
+    },
+    {
+      "tool": "analyze_document",
+      "question": "Summarize this incident report.",
+      "input": {
+        "source": "Incident report: On 2024-03-02 the payments API suffered a 45 minute outage. Root cause was a database connection pool exhaustion caused by a slow migration job. The on-call engineer rolled back the migration and traffic recovered. Action items: add pool monitoring, cap migration concurrency, and schedule migrations off-peak."
+      },
+      "reference": "payments API outage database connection pool exhaustion migration monitor"
+    },
+    {
+      "tool": "review_code",
+      "question": "Review this Python snippet for security and quality issues.",
+      "input": {
+        "language": "python",
+        "source": "import os\n\n\ndef run(cmd, opts=[]):\n    try:\n        result = eval(cmd)\n    except:\n        return None\n    return result, opts\n"
+      },
+      "reference": "The code uses eval() which is a dangerous call and a bare except clause, plus a mutable default argument on the function.",
+      "metadata": {
+        "expected_language": "python",
+        "expected_rules": ["dangerous-call", "bare-except", "mutable-default"]
+      }
+    },
+    {
+      "tool": "analyze_data",
+      "question": "Profile this dataset.",
+      "input": {
+        "source": "name,age,city\nAda,36,London\nGrace,45,New York\nAlan,41,Cambridge\n",
+        "question": "How many rows and columns are there?"
+      },
+      "reference": "The dataset has three rows and the columns name, age and city.",
+      "metadata": {
+        "expected_rows": 3,
+        "expected_columns": ["name", "age", "city"]
+      }
+    },
+    {
+      "tool": "web_research",
+      "question": "What is the Model Context Protocol?",
+      "input": {
+        "max_sources": 3
+      },
+      "reference": "Model Context Protocol open standard tools",
+      "metadata": {
+        "min_sources": 0
+      }
+    },
+    {
+      "tool": "generate_report",
+      "question": "Write a short report about the MCP Tool Suite.",
+      "input": {
+        "sources": "The MCP Tool Suite is a single remote server exposing many AI-callable tools over the Model Context Protocol. It supports streamable-http and stdio transports and can be secured with none, bearer or oauth2 auth.",
+        "max_words": 300
+      },
+      "reference": "MCP Tool Suite exposes tools over the Model Context Protocol with streamable-http, stdio and oauth2.",
+      "metadata": {
+        "min_sources": 1
+      }
     }
   ]
 }

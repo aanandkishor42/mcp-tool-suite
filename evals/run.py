@@ -25,7 +25,7 @@ from evals.runner import PerToolEvaluator
 from evals.testset import load_eval_samples, save_eval_results
 
 
-async def main() -> None:
+async def _run() -> None:
   parser = argparse.ArgumentParser(description="Per-tool eval harness")
   parser.add_argument("--samples", type=Path, default=Path("evals/data/sample.json"), help="Path to JSON samples")
   parser.add_argument("--output", type=Path, default=Path("evals/results/sample.json"), help="Path to write results JSON")
@@ -38,10 +38,16 @@ async def main() -> None:
   elapsed = time.perf_counter() - start
   results["meta"] = {
       "samples_loaded": len(samples),
+      "tools_evaluated": sorted({s.tool for s in samples}),
       "elapsed_seconds": round(elapsed, 3),
   }
   save_eval_results(args.output, results)
 
 
+def main() -> None:
+  """Synchronous entry point for the ``mcp-tool-suite-eval`` console script."""
+  asyncio.run(_run())
+
+
 if __name__ == "__main__":
-  asyncio.run(main())
+  main()

@@ -243,15 +243,22 @@ Tests run fully offline (fake LLM + hashing embeddings + in-memory vectors).
 
 ## Evaluation
 
-Run offline evaluations of the RAG tools using the built-in harness:
+Run the offline, **per-tool** evaluation harness (fake LLM + hashing embeddings +
+no web search, so it needs no keys or network). Every tool is exercised with its
+own metrics — keyword coverage, answered rate and citation count for the RAG
+tools, static-analysis rule/severity matching for `review_code`, row/column shape
+checks for `analyze_data`, and source counts for `web_research`/`generate_report`:
 
-`powershell
+```powershell
 mcp-tool-suite-eval --samples evals/data/sample.json --output evals/results/latest.json
 # or
 python -m evals --samples evals/data/sample.json --output evals/results/latest.json
-`
+```
 
-Results include keyword coverage, answered rate, and per-sample details. See evals/runner.py and evals/data/ for customization.
+Each sample in `evals/data/sample.json` declares its target `tool` (default
+`document_qa`) plus tool-specific `input` and `metadata` expectations. Results
+contain per-sample outputs and an `aggregate` block grouped `by_tool`. Add new
+evaluators in `evals/evaluators.py` and samples to the JSON to extend coverage.
 
 
 
@@ -269,7 +276,7 @@ docker compose up --build        # http://localhost:8000/mcp
 - [ ] Long-running work as MCP **Tasks** (e.g. expensive report generation)
 - [ ] **MCP Apps** widgets for the usage/cost dashboard
 - [ ] More tools: email assistant, dashboard
-- [ ] Eval harness per tool (reusing the RAG-eval approach)
+- [x] Eval harness per tool (reusing the RAG-eval approach)
 
 ## License
 

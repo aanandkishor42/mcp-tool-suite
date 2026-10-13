@@ -1,7 +1,5 @@
 """Allow running evals as `python -m evals`."""
-import asyncio
-
-from .run import main as run_main
+from .run import main
 
 if __name__ == "__main__":
-    asyncio.run(run_main())
+    main()

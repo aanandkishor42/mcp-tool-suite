@@ -31,7 +31,8 @@ pgvector = ["psycopg[binary]>=3.2", "pgvector>=0.3"]
 
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["src", "."]
+include = ["mcp_tool_suite*", "evals*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

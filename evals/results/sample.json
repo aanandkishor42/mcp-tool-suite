@@ -4,190 +4,365 @@
       "tool": "document_qa",
       "question": "What does the MCP Tool Suite do?",
       "reference": "The MCP Tool Suite is a multi-tool MCP server platform that exposes many AI-callable tools over the Model Context Protocol, so a single server can be connected to multiple clients.",
-      "answer": "[fake:fake] Context:\n[1] (source: eval-7316640215976572564)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\n[2] (source: eval-8931152027879165502)\nA multi-tool MCP server platform: one remote server that exposes many A",
-      "citations": [
-        {
-          "index": 1,
-          "source": "eval-7316640215976572564",
-          "score": 0.2315,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 2,
-          "source": "eval-8931152027879165502",
-          "score": 0.2315,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 3,
-          "source": "eval-1742536670777840544",
-          "score": 0.2315,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 4,
-          "source": "eval-4050824957595599716",
-          "score": 0.2315,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        }
-      ],
-      "keyword_coverage": 0.6667,
-      "has_answer": true,
-      "citation_count": 4,
-      "latency_ms": 0
+      "error": null,
+      "output": {
+        "answer": "[fake:fake] Context:\n[1] (source: eval-b0a7367159e8)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\nQuestion: What does the MCP Tool Suite do?",
+        "citations": [
+          {
+            "index": 1,
+            "source": "eval-b0a7367159e8",
+            "score": 0.2315,
+            "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
+          }
+        ]
+      },
+      "metrics": {
+        "keyword_coverage": 0.7778,
+        "has_answer": true,
+        "citation_count": 1
+      },
+      "latency_ms": 3.37
     },
     {
       "tool": "document_qa",
       "question": "What transports does it support?",
       "reference": "Streamable HTTP (default) and stdio.",
-      "answer": "[fake:fake] Context:\n[1] (source: eval-7316640215976572564)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\n[2] (source: eval--6701606791123150966)\nstreamable-http (default) and stdio\n\n[3] (source: eval-831194380102640",
-      "citations": [
-        {
-          "index": 1,
-          "source": "eval-7316640215976572564",
-          "score": 0.0,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 2,
-          "source": "eval--6701606791123150966",
-          "score": 0.0,
-          "snippet": "streamable-http (default) and stdio"
-        },
-        {
-          "index": 3,
-          "source": "eval-8311943801026406707",
-          "score": 0.0,
-          "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
-        },
-        {
-          "index": 4,
-          "source": "eval--7464155832457528716",
-          "score": 0.0,
-          "snippet": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report"
-        }
-      ],
-      "keyword_coverage": 0.75,
-      "has_answer": true,
-      "citation_count": 4,
-      "latency_ms": 0
+      "error": null,
+      "output": {
+        "answer": "[fake:fake] Context:\n[1] (source: eval-b0a7367159e8)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\n[2] (source: eval-e23135fcbc33)\nstreamable-http (default) and stdio\n\nQuestion: What transports does it support?",
+        "citations": [
+          {
+            "index": 1,
+            "source": "eval-b0a7367159e8",
+            "score": 0.0,
+            "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
+          },
+          {
+            "index": 2,
+            "source": "eval-e23135fcbc33",
+            "score": 0.0,
+            "snippet": "streamable-http (default) and stdio"
+          }
+        ]
+      },
+      "metrics": {
+        "keyword_coverage": 1.0,
+        "has_answer": true,
+        "citation_count": 2
+      },
+      "latency_ms": 1.04
     },
     {
       "tool": "document_qa",
       "question": "Which auth modes are supported?",
       "reference": "none, bearer, and oauth2.",
-      "answer": "[fake:fake] Context:\n[1] (source: eval-8311943801026406707)\nAuth is selected with AUTH_MODE; modes: none (default), bearer, oauth2\n\n[2] (source: eval--2625928875876570856)\nAuth is selected with AUTH_MODE; modes: none (default), bearer, oauth2\n\n[3] (source: eval-4038325101622537505)\nAuth is s",
-      "citations": [
-        {
-          "index": 1,
-          "source": "eval-8311943801026406707",
-          "score": 0.3721,
-          "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
-        },
-        {
-          "index": 2,
-          "source": "eval--2625928875876570856",
-          "score": 0.3721,
-          "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
-        },
-        {
-          "index": 3,
-          "source": "eval-4038325101622537505",
-          "score": 0.3721,
-          "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
-        },
-        {
-          "index": 4,
-          "source": "eval-4975360632426045888",
-          "score": 0.3721,
-          "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
-        }
-      ],
-      "keyword_coverage": 0.3333,
-      "has_answer": true,
-      "citation_count": 4,
-      "latency_ms": 0
+      "error": null,
+      "output": {
+        "answer": "[fake:fake] Context:\n[1] (source: eval-4ea2641b5468)\nAuth is selected with AUTH_MODE; modes: none (default), bearer, oauth2\n\n[2] (source: eval-b0a7367159e8)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\n[3] (source: ",
+        "citations": [
+          {
+            "index": 1,
+            "source": "eval-4ea2641b5468",
+            "score": 0.3721,
+            "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
+          },
+          {
+            "index": 2,
+            "source": "eval-b0a7367159e8",
+            "score": 0.0,
+            "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
+          },
+          {
+            "index": 3,
+            "source": "eval-e23135fcbc33",
+            "score": 0.0,
+            "snippet": "streamable-http (default) and stdio"
+          }
+        ]
+      },
+      "metrics": {
+        "keyword_coverage": 1.0,
+        "has_answer": true,
+        "citation_count": 3
+      },
+      "latency_ms": 0.89
     },
     {
       "tool": "document_qa",
       "question": "Which tools are included?",
       "reference": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report.",
-      "answer": "[fake:fake] Context:\n[1] (source: eval-7316640215976572564)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\n[2] (source: eval-8931152027879165502)\nA multi-tool MCP server platform: one remote server that exposes many A",
-      "citations": [
-        {
-          "index": 1,
-          "source": "eval-7316640215976572564",
-          "score": 0.1021,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 2,
-          "source": "eval-8931152027879165502",
-          "score": 0.1021,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 3,
-          "source": "eval-1742536670777840544",
-          "score": 0.1021,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        },
-        {
-          "index": 4,
-          "source": "eval-4050824957595599716",
-          "score": 0.1021,
-          "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
-        }
-      ],
-      "keyword_coverage": 0.0,
-      "has_answer": true,
-      "citation_count": 4,
-      "latency_ms": 0
+      "error": null,
+      "output": {
+        "answer": "[fake:fake] Context:\n[1] (source: eval-b0a7367159e8)\nA multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol.\n\n[2] (source: eval-e23135fcbc33)\nstreamable-http (default) and stdio\n\n[3] (source: eval-4ea2641b5468)\nAuth is selected",
+        "citations": [
+          {
+            "index": 1,
+            "source": "eval-b0a7367159e8",
+            "score": 0.1021,
+            "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
+          },
+          {
+            "index": 2,
+            "source": "eval-e23135fcbc33",
+            "score": 0.0,
+            "snippet": "streamable-http (default) and stdio"
+          },
+          {
+            "index": 3,
+            "source": "eval-4ea2641b5468",
+            "score": 0.0,
+            "snippet": "Auth is selected with AUTH_MODE; modes: none (default), bearer, oauth2"
+          },
+          {
+            "index": 4,
+            "source": "eval-6443a8e511d1",
+            "score": 0.0,
+            "snippet": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report"
+          }
+        ]
+      },
+      "metrics": {
+        "keyword_coverage": 0.0,
+        "has_answer": true,
+        "citation_count": 4
+      },
+      "latency_ms": 0.84
     },
     {
       "tool": "document_qa",
       "question": "What providers does it use for LLMs and embeddings?",
       "reference": "LLMs: groq, ollama, openai, anthropic, fake. Embeddings: ollama, openai, hashing.",
-      "answer": "[fake:fake] Context:\n[1] (source: eval--8803675253484257295)\nLLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing\n\n[2] (source: eval--3010979450573004324)\nLLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashin",
-      "citations": [
-        {
-          "index": 1,
-          "source": "eval--8803675253484257295",
-          "score": 0.1721,
-          "snippet": "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
-        },
-        {
-          "index": 2,
-          "source": "eval--3010979450573004324",
-          "score": 0.1721,
-          "snippet": "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
-        },
-        {
-          "index": 3,
-          "source": "eval--1637272297184350737",
-          "score": 0.1721,
-          "snippet": "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
-        },
-        {
-          "index": 4,
-          "source": "eval--2999817681242896642",
-          "score": 0.1721,
-          "snippet": "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
-        }
-      ],
-      "keyword_coverage": 0.25,
-      "has_answer": true,
-      "citation_count": 4,
-      "latency_ms": 0
+      "error": null,
+      "output": {
+        "answer": "[fake:fake] Context:\n[1] (source: eval-a1e92bccb282)\nLLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing\n\n[2] (source: eval-e23135fcbc33)\nstreamable-http (default) and stdio\n\n[3] (source: eval-6443a8e511d1)\nindex_document, semantic_search, document",
+        "citations": [
+          {
+            "index": 1,
+            "source": "eval-a1e92bccb282",
+            "score": 0.1721,
+            "snippet": "LLM providers: groq | ollama | openai | anthropic | fake. Embeddings: ollama | openai | hashing"
+          },
+          {
+            "index": 2,
+            "source": "eval-e23135fcbc33",
+            "score": 0.1491,
+            "snippet": "streamable-http (default) and stdio"
+          },
+          {
+            "index": 3,
+            "source": "eval-6443a8e511d1",
+            "score": 0.0,
+            "snippet": "index_document, semantic_search, document_qa, analyze_document, review_code, analyze_data, web_research, generate_report"
+          },
+          {
+            "index": 4,
+            "source": "eval-b0a7367159e8",
+            "score": 0.0,
+            "snippet": "A multi-tool MCP server platform: one remote server that exposes many AI-callable tools over the Model Context Protocol."
+          }
+        ]
+      },
+      "metrics": {
+        "keyword_coverage": 0.875,
+        "has_answer": true,
+        "citation_count": 4
+      },
+      "latency_ms": 0.89
+    },
+    {
+      "tool": "semantic_search",
+      "question": "What transports does the server expose?",
+      "reference": "streamable-http and stdio",
+      "error": null,
+      "output": {
+        "hits": [
+          {
+            "id": "evals-5",
+            "score": 0.4082,
+            "source": "eval-24862c63fdbb"
+          },
+          {
+            "id": "evals-0",
+            "score": 0.25,
+            "source": "eval-b0a7367159e8"
+          },
+          {
+            "id": "evals-2",
+            "score": 0.0,
+            "source": "eval-4ea2641b5468"
+          },
+          {
+            "id": "evals-1",
+            "score": 0.0,
+            "source": "eval-e23135fcbc33"
+          }
+        ]
+      },
+      "metrics": {
+        "hit_count": 4,
+        "keyword_coverage": 1.0
+      },
+      "latency_ms": 0.82
+    },
+    {
+      "tool": "analyze_document",
+      "question": "Summarize this incident report.",
+      "reference": "payments API outage database connection pool exhaustion migration monitor",
+      "error": null,
+      "output": {
+        "characters": 327,
+        "truncated": false
+      },
+      "metrics": {
+        "keyword_coverage": 0.875,
+        "characters": 327
+      },
+      "latency_ms": 0.09
+    },
+    {
+      "tool": "review_code",
+      "question": "Review this Python snippet for security and quality issues.",
+      "reference": "The code uses eval() which is a dangerous call and a bare except clause, plus a mutable default argument on the function.",
+      "error": null,
+      "output": {
+        "language": "python",
+        "findings": [
+          {
+            "severity": "medium",
+            "line": 4,
+            "rule": "mutable-default",
+            "message": "Function 'run' uses a mutable default argument."
+          },
+          {
+            "severity": "medium",
+            "line": 7,
+            "rule": "bare-except",
+            "message": "Bare 'except:' swallows all errors."
+          },
+          {
+            "severity": "high",
+            "line": 6,
+            "rule": "dangerous-call",
+            "message": "Use of 'eval()' is a security risk."
+          }
+        ]
+      },
+      "metrics": {
+        "findings_count": 3,
+        "language_match": true,
+        "rules_matched": 1.0,
+        "keyword_coverage": 0.6429
+      },
+      "latency_ms": 0.32
+    },
+    {
+      "tool": "analyze_data",
+      "question": "Profile this dataset.",
+      "reference": "The dataset has three rows and the columns name, age and city.",
+      "error": null,
+      "output": {
+        "rows": 3,
+        "columns": [
+          "name",
+          "age",
+          "city"
+        ]
+      },
+      "metrics": {
+        "rows": 3,
+        "rows_match": true,
+        "columns_match": true,
+        "keyword_coverage": 0.8333
+      },
+      "latency_ms": 0.7
+    },
+    {
+      "tool": "web_research",
+      "question": "What is the Model Context Protocol?",
+      "reference": "Model Context Protocol open standard tools",
+      "error": null,
+      "output": {
+        "source_count": 0,
+        "summary": "No search results were returned (the search provider may be disabled or offline)."
+      },
+      "metrics": {
+        "source_count": 0,
+        "min_sources_met": true,
+        "keyword_coverage": 0.0
+      },
+      "latency_ms": 0.01
+    },
+    {
+      "tool": "generate_report",
+      "question": "Write a short report about the MCP Tool Suite.",
+      "reference": "MCP Tool Suite exposes tools over the Model Context Protocol with streamable-http, stdio and oauth2.",
+      "error": null,
+      "output": {
+        "sources_used": 7
+      },
+      "metrics": {
+        "sources_used": 7,
+        "min_sources_met": true,
+        "keyword_coverage": 0.6667
+      },
+      "latency_ms": 0.14
     }
   ],
   "aggregate": {
-    "count": 5,
-    "mean_keyword_coverage": 0.4,
-    "answered_rate": 1.0
+    "count": 11,
+    "error_count": 0,
+    "mean_keyword_coverage": 0.6973,
+    "answered_rate": 1.0,
+    "by_tool": {
+      "document_qa": {
+        "count": 5,
+        "mean_citation_count": 2.8,
+        "mean_keyword_coverage": 0.7306
+      },
+      "semantic_search": {
+        "count": 1,
+        "mean_hit_count": 4.0,
+        "mean_keyword_coverage": 1.0
+      },
+      "analyze_document": {
+        "count": 1,
+        "mean_characters": 327.0,
+        "mean_keyword_coverage": 0.875
+      },
+      "review_code": {
+        "count": 1,
+        "mean_findings_count": 3.0,
+        "mean_keyword_coverage": 0.6429,
+        "mean_rules_matched": 1.0
+      },
+      "analyze_data": {
+        "count": 1,
+        "mean_keyword_coverage": 0.8333,
+        "mean_rows": 3.0
+      },
+      "web_research": {
+        "count": 1,
+        "mean_keyword_coverage": 0.0,
+        "mean_source_count": 0.0
+      },
+      "generate_report": {
+        "count": 1,
+        "mean_keyword_coverage": 0.6667,
+        "mean_sources_used": 7.0
+      }
+    }
   },
   "meta": {
-    "samples_loaded": 5,
-    "elapsed_seconds": 0.01
+    "samples_loaded": 11,
+    "tools_evaluated": [
+      "analyze_data",
+      "analyze_document",
+      "document_qa",
+      "generate_report",
+      "review_code",
+      "semantic_search",
+      "web_research"
+    ],
+    "elapsed_seconds": 0.009
   }
 }
