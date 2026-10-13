@@ -27,6 +27,10 @@ class ToolPlugin(Protocol):
     # A plugin may optionally define ``meta: dict[str, Any]`` to stamp ``_meta`` on
     # the tool (e.g. MCP Apps ``{"ui": {"resourceUri": ...}}``); the registry reads
     # it with ``getattr(plugin, "meta", None)``.
+    #
+    # A plugin may also optionally define ``task_support: "optional" | "required"``
+    # to advertise that it can run as a background MCP Task (2025-11-25); see
+    # ``mcp_tool_suite.tools.task_augmentable_tools``.
 
 
 def _tracked(name: str, fn: ToolCallable, ctx: AppContext) -> ToolCallable:

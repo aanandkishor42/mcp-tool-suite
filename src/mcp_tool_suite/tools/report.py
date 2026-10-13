@@ -27,6 +27,8 @@ class GenerateReportTool:
         "Generate a structured Markdown report on a topic, grounded in a previously "
         "indexed collection and/or sources you pass in. Returns the report as Markdown."
     )
+    #: Long-running enough to be worth deferring as an MCP Task (2025-11-25).
+    task_support = "optional"
 
     def create(self, ctx: AppContext) -> ToolCallable:
         async def generate_report(

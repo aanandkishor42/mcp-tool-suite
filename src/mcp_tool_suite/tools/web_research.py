@@ -24,6 +24,8 @@ class WebResearchTool:
         "cited summary of what those pages say. Uses a pluggable search provider "
         "(DuckDuckGo by default, no API key needed)."
     )
+    #: Long-running enough to be worth deferring as an MCP Task (2025-11-25).
+    task_support = "optional"
 
     def create(self, ctx: AppContext) -> ToolCallable:
         async def web_research(query: str, max_sources: int = 5) -> dict:

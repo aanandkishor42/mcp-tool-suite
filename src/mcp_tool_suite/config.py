@@ -85,6 +85,11 @@ class Settings(BaseSettings):
     llm_input_price_per_1k: float | None = None
     llm_output_price_per_1k: float | None = None
 
+    # MCP Tasks (background execution of long-running tools, 2025-11-25)
+    tasks_enabled: bool = True
+    tasks_default_ttl_ms: int = 3_600_000  # how long a finished task is retained
+    tasks_poll_interval_ms: int | None = 1000  # suggested poll interval sent to clients
+
     def resolved_llm_model(self) -> str:
         return self.llm_model or DEFAULT_MODELS[self.llm_provider]
 

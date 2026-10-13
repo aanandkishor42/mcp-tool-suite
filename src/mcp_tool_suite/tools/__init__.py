@@ -28,6 +28,7 @@ __all__ = [
     "UsageStatsTool",
     "WebResearchTool",
     "default_plugins",
+    "task_augmentable_tools",
 ]
 
 
@@ -48,4 +49,13 @@ def default_plugins() -> list[ToolPlugin]:
         EmailAssistantTool(),
         # Observability
         UsageStatsTool(),
+    ]
+
+
+def task_augmentable_tools() -> list[str]:
+    """Names of bundled tools that may run as background MCP Tasks (2025-11-25)."""
+    return [
+        plugin.name
+        for plugin in default_plugins()
+        if getattr(plugin, "task_support", None) in ("optional", "required")
     ]

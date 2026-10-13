@@ -291,6 +291,35 @@ support Apps render the widget; text-only clients get the plain text/Markdown
 answer, so the tool degrades gracefully (SEP-2133). Nothing else is required to
 enable it — the `Apps` extension is registered in `server.py:build_apps`.
 
+### MCP Tasks (long-running tools)
+
+Tools whose work is slow — `web_research` and `generate_report` — can be deferred
+to a background **MCP Task** (protocol **2025-11-25**). Their `tools/list` entries
+carry `execution.taskSupport: "optional"`, and the server advertises the `tasks`
+capability with the `tools.call` request.
+
+When a client sends `tools/call` with a `task` field (`{"ttl": <ms>}`), the server
+returns a `CreateTaskResult` immediately and runs the tool in the background on the
+event loop. The client then drives the lifecycle with the standard task methods:
+
+| Method | Purpose |
+| --- | --- |
+| `tasks/get` | poll status (`working` → `completed`/`failed`/`cancelled`) |
+| `tasks/list` | enumerate live tasks |
+| `tasks/result` | fetch the final `CallToolResult` (errors until terminal) |
+| `tasks/cancel` | request cancellation (idempotent; terminal states are sticky) |
+
+Tasks are held in an in-process `TaskStore` (`services/tasks.py`) and expire
+`tasks_default_ttl_ms` after they finish. Passing `task` to a non-task tool is
+rejected with `INVALID_PARAMS`. A missing `task` field runs the tool inline as
+usual, so nothing changes for plain clients.
+
+Tune via `TASKS_ENABLED`, `TASKS_DEFAULT_TTL_MS` and `TASKS_POLL_INTERVAL_MS`
+(see `.env.example`). Tasks require the `2025-11-25` wire; on the newer
+`2026-07-28` wire the `tasks/*` methods are absent and callers should fall back to
+a synchronous call. Note: the bundled SDK client cannot parse a task-augmented
+`tools/call` response, so exercise it with a wire-level client or the tests in
+`tests/test_tasks.py`.
 
 
 ```powershell
@@ -304,7 +333,7 @@ docker compose up --build        # http://localhost:8000/mcp
 - [x] Tool suite: document/RAG + code review + data analysis + web research + report generator
 - [x] OAuth 2.1 authorization + resource server (RFC 8414/7591/7636/8707/9728, PKCE, JWT, refresh rotation)
 - [x] Postgres + pgvector backend behind the `VectorStore` interface (`VECTOR_STORE=pgvector`)
-- [ ] Long-running work as MCP **Tasks** (e.g. expensive report generation)
+- [x] Long-running work as MCP **Tasks** (e.g. expensive report generation)
 - [x] Usage/cost dashboard tool + stats endpoint
 - [x] **MCP Apps** widget for the usage/cost dashboard (`io.modelcontextprotocol/ui`)
 - [x] Eval harness per tool (reusing the RAG-eval approach)

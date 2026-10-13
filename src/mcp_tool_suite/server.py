@@ -7,6 +7,7 @@ from typing import Any
 import uvicorn
 from mcp.server.apps import Apps
 from mcp.server.mcpserver import MCPServer
+from mcp_types import ListToolsResult, ToolExecution
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -15,7 +16,8 @@ from mcp_tool_suite.auth.middleware import OAuth2ResourceServerMiddleware
 from mcp_tool_suite.config import Settings, get_settings
 from mcp_tool_suite.context import AppContext, build_context
 from mcp_tool_suite.registry import ToolRegistry
-from mcp_tool_suite.tools import default_plugins
+from mcp_tool_suite.tasks_extension import TasksExtension, build_tasks_extension
+from mcp_tool_suite.tools import default_plugins, task_augmentable_tools
 from mcp_tool_suite.tools.dashboard import DASHBOARD_HTML, DASHBOARD_URI
 
 INSTRUCTIONS = (
@@ -30,6 +32,25 @@ def build_registry() -> ToolRegistry:
     return ToolRegistry(default_plugins())
 
 
+class ToolSuiteServer(MCPServer):
+    """``MCPServer`` that additionally advertises ``Tool.execution.taskSupport``.
+
+    The SDK has no plumbing for the 2025-11-25 ``execution`` field, so we stamp
+    it onto the ``tools/list`` result for the tools that can run as tasks.
+    """
+
+    def __init__(self, *args: Any, task_tool_names: Any = (), **kwargs: Any) -> None:
+        self._task_tool_names = frozenset(task_tool_names)
+        super().__init__(*args, **kwargs)
+
+    async def _handle_list_tools(self, ctx: Any, params: Any) -> ListToolsResult:
+        result = await super()._handle_list_tools(ctx, params)
+        for tool in result.tools:
+            if tool.name in self._task_tool_names:
+                tool.execution = ToolExecution(task_support="optional")
+        return result
+
+
 def build_apps() -> Apps:
     """The MCP Apps extension: serves the interactive usage dashboard widget."""
     apps = Apps()
@@ -42,14 +63,33 @@ def build_apps() -> Apps:
     return apps
 
 
+def build_tasks(ctx: AppContext) -> TasksExtension | None:
+    """The MCP Tasks extension, unless disabled in settings."""
+    if not ctx.settings.tasks_enabled:
+        return None
+    return build_tasks_extension(
+        task_augmentable_tools(),
+        default_ttl_ms=ctx.settings.tasks_default_ttl_ms,
+        poll_interval_ms=ctx.settings.tasks_poll_interval_ms,
+    )
+
+
 def build_mcp_server(ctx: AppContext) -> MCPServer:
-    server = MCPServer(
+    extensions: list[Any] = [build_apps()]
+    tasks = build_tasks(ctx)
+    if tasks is not None:
+        extensions.append(tasks)
+
+    server = ToolSuiteServer(
         name=ctx.settings.server_name,
         version=ctx.settings.server_version,
         instructions=INSTRUCTIONS,
-        extensions=[build_apps()],
+        extensions=extensions,
+        task_tool_names=task_augmentable_tools(),
     )
     build_registry().apply(server, ctx)
+    if tasks is not None:
+        tasks.install(server)
     return server
 
 
