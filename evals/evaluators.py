@@ -20,6 +20,7 @@ from mcp_tool_suite.tools import (
     AnalyzeDataTool,
     AnalyzeDocumentTool,
     DocumentQaTool,
+    EmailAssistantTool,
     GenerateReportTool,
     ReviewCodeTool,
     SemanticSearchTool,
@@ -255,6 +256,38 @@ async def evaluate_generate_report(ctx: AppContext, sample: EvalSample) -> dict[
     }
 
 
+async def evaluate_email_assistant(ctx: AppContext, sample: EvalSample) -> dict[str, Any]:
+    tool = EmailAssistantTool().create(ctx)
+    action = str(sample.input.get("action", "extract_actions"))
+    out = await tool(
+        source=_source(sample),
+        action=action,
+        instruction=str(sample.input.get("instruction", "")),
+        recipient=str(sample.input.get("recipient", "")),
+        tone=str(sample.input.get("tone", "professional")),
+    )
+    messages = out.get("messages", [])
+    items = out.get("action_items", [])
+    found = " ".join(str(item.get("text", "")) for item in items)
+    expected = [str(x) for x in sample.metadata.get("expected_action_items", [])]
+    return {
+        "output": {
+            "action": out.get("action"),
+            "message_count": len(messages),
+            "action_item_count": len(items),
+            "subject": out.get("subject"),
+        },
+        "metrics": {
+            "message_count": len(messages),
+            "action_item_count": len(items),
+            "keyword_coverage": OfflineMetrics.keyword_coverage(sample.reference, out.get("summary", "")),
+            "action_items_matched": (
+                OfflineMetrics.ratio_matched(found, expected) if expected else None
+            ),
+        },
+    }
+
+
 ToolEvaluator = Callable[[AppContext, EvalSample], Awaitable[dict[str, Any]]]
 
 TOOL_EVALUATORS: dict[str, ToolEvaluator] = {
@@ -265,6 +298,7 @@ TOOL_EVALUATORS: dict[str, ToolEvaluator] = {
     "analyze_data": evaluate_analyze_data,
     "web_research": evaluate_web_research,
     "generate_report": evaluate_generate_report,
+    "email_assistant": evaluate_email_assistant,
 }
 
 

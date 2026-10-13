@@ -21,7 +21,7 @@
         "has_answer": true,
         "citation_count": 1
       },
-      "latency_ms": 3.37
+      "latency_ms": 3.88
     },
     {
       "tool": "document_qa",
@@ -50,7 +50,7 @@
         "has_answer": true,
         "citation_count": 2
       },
-      "latency_ms": 1.04
+      "latency_ms": 0.88
     },
     {
       "tool": "document_qa",
@@ -85,7 +85,7 @@
         "has_answer": true,
         "citation_count": 3
       },
-      "latency_ms": 0.89
+      "latency_ms": 0.96
     },
     {
       "tool": "document_qa",
@@ -126,7 +126,7 @@
         "has_answer": true,
         "citation_count": 4
       },
-      "latency_ms": 0.84
+      "latency_ms": 0.97
     },
     {
       "tool": "document_qa",
@@ -167,7 +167,7 @@
         "has_answer": true,
         "citation_count": 4
       },
-      "latency_ms": 0.89
+      "latency_ms": 1.14
     },
     {
       "tool": "semantic_search",
@@ -202,7 +202,7 @@
         "hit_count": 4,
         "keyword_coverage": 1.0
       },
-      "latency_ms": 0.82
+      "latency_ms": 0.73
     },
     {
       "tool": "analyze_document",
@@ -217,7 +217,7 @@
         "keyword_coverage": 0.875,
         "characters": 327
       },
-      "latency_ms": 0.09
+      "latency_ms": 0.07
     },
     {
       "tool": "review_code",
@@ -253,7 +253,7 @@
         "rules_matched": 1.0,
         "keyword_coverage": 0.6429
       },
-      "latency_ms": 0.32
+      "latency_ms": 0.28
     },
     {
       "tool": "analyze_data",
@@ -274,7 +274,7 @@
         "columns_match": true,
         "keyword_coverage": 0.8333
       },
-      "latency_ms": 0.7
+      "latency_ms": 0.62
     },
     {
       "tool": "web_research",
@@ -305,13 +305,32 @@
         "min_sources_met": true,
         "keyword_coverage": 0.6667
       },
-      "latency_ms": 0.14
+      "latency_ms": 0.11
+    },
+    {
+      "tool": "email_assistant",
+      "question": "Extract action items from this email thread.",
+      "reference": "send the release notes review the pricing page schedule a dry run",
+      "error": null,
+      "output": {
+        "action": "extract_actions",
+        "message_count": 1,
+        "action_item_count": 3,
+        "subject": null
+      },
+      "metrics": {
+        "message_count": 1,
+        "action_item_count": 3,
+        "keyword_coverage": 1.0,
+        "action_items_matched": 1.0
+      },
+      "latency_ms": 0.24
     }
   ],
   "aggregate": {
-    "count": 11,
+    "count": 12,
     "error_count": 0,
-    "mean_keyword_coverage": 0.6973,
+    "mean_keyword_coverage": 0.7226,
     "answered_rate": 1.0,
     "by_tool": {
       "document_qa": {
@@ -349,20 +368,28 @@
         "count": 1,
         "mean_keyword_coverage": 0.6667,
         "mean_sources_used": 7.0
+      },
+      "email_assistant": {
+        "count": 1,
+        "mean_action_item_count": 3.0,
+        "mean_action_items_matched": 1.0,
+        "mean_keyword_coverage": 1.0,
+        "mean_message_count": 1.0
       }
     }
   },
   "meta": {
-    "samples_loaded": 11,
+    "samples_loaded": 12,
     "tools_evaluated": [
       "analyze_data",
       "analyze_document",
       "document_qa",
+      "email_assistant",
       "generate_report",
       "review_code",
       "semantic_search",
       "web_research"
     ],
-    "elapsed_seconds": 0.009
+    "elapsed_seconds": 0.01
   }
 }

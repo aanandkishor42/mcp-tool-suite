@@ -31,6 +31,7 @@ handling, semantic search and a clean developer experience.
 | `analyze_data` | Profile a CSV/TSV (per-column numeric/categorical stats) + AI insights, optional question |
 | `web_research` | Search the web (DuckDuckGo, no API key), fetch pages, synthesize a cited summary |
 | `generate_report` | Write a structured Markdown report grounded in a collection and/or provided sources |
+| `email_assistant` | Draft email, summarize a mailbox, or extract action items/open questions from `.eml`/mbox text |
 
 Every tool is a plugin — see **Adding a tool**.
 
@@ -202,8 +203,8 @@ src/mcp_tool_suite/
   server.py        MCPServer + Starlette app assembly
   providers/       base · openai_compatible · anthropic · fake · hashing · router
   services/        documents (load/chunk/html) · vectorstore · rag
-                   · code_analysis (AST) · data_analysis (CSV) · web (search)
-  tools/           rag_tools · analyze · code_review · data_analysis · web_research · report
+                   · code_analysis (AST) · data_analysis (CSV) · email_analysis (MIME) · web (search)
+  tools/           rag_tools · analyze · code_review · data_analysis · web_research · report · email
                    (+ add your own)
 docs/              connecting-clients.md (per-client setup)
 examples/          client-config*.json · oauth_flow.py
@@ -247,7 +248,8 @@ Run the offline, **per-tool** evaluation harness (fake LLM + hashing embeddings 
 no web search, so it needs no keys or network). Every tool is exercised with its
 own metrics — keyword coverage, answered rate and citation count for the RAG
 tools, static-analysis rule/severity matching for `review_code`, row/column shape
-checks for `analyze_data`, and source counts for `web_research`/`generate_report`:
+checks for `analyze_data`, source counts for `web_research`/`generate_report`, and
+action-item extraction for `email_assistant`:
 
 ```powershell
 mcp-tool-suite-eval --samples evals/data/sample.json --output evals/results/latest.json
@@ -274,9 +276,10 @@ docker compose up --build        # http://localhost:8000/mcp
 - [x] OAuth 2.1 authorization + resource server (RFC 8414/7591/7636/8707/9728, PKCE, JWT, refresh rotation)
 - [x] Postgres + pgvector backend behind the `VectorStore` interface (`VECTOR_STORE=pgvector`)
 - [ ] Long-running work as MCP **Tasks** (e.g. expensive report generation)
+- [ ] Usage/cost dashboard tool + stats endpoint
 - [ ] **MCP Apps** widgets for the usage/cost dashboard
-- [ ] More tools: email assistant, dashboard
 - [x] Eval harness per tool (reusing the RAG-eval approach)
+- [x] Email assistant tool (draft · summarize · extract action items)
 
 ## License
 

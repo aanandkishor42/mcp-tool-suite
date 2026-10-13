@@ -99,6 +99,18 @@
       "metadata": {
         "min_sources": 1
       }
+    },
+    {
+      "tool": "email_assistant",
+      "question": "Extract action items from this email thread.",
+      "input": {
+        "action": "extract_actions",
+        "source": "From: Priya <priya@example.com>\nTo: Team <team@example.com>\nSubject: Launch checklist\nDate: Mon, 3 Mar 2025 09:15:00 +0000\n\nHi team,\nPlease send the release notes by Friday.\nWe should review the pricing page before launch.\nCan you schedule a dry run next week?\nThanks,\nPriya\n"
+      },
+      "reference": "send the release notes review the pricing page schedule a dry run",
+      "metadata": {
+        "expected_action_items": ["send the release notes", "review the pricing page", "schedule a dry run"]
+      }
     }
   ]
 }

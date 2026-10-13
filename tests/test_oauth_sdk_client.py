@@ -143,7 +143,7 @@ def test_sdk_oauth_client_end_to_end(live_server):
     storage, info, tools = asyncio.run(_drive(base, settings))
 
     assert info.server_info.name == settings.server_name
-    assert len(tools.tools) == 8
+    assert len(tools.tools) == 9
     assert storage.tokens is not None
     assert storage.tokens.access_token.count(".") == 2  # a JWT
     assert storage.client_info is not None
