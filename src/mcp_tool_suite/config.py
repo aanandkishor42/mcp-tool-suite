@@ -9,6 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 LLMProviderName = Literal["groq", "ollama", "openai", "anthropic", "fake"]
 EmbedProviderName = Literal["ollama", "openai", "hashing"]
+VectorStoreName = Literal["memory", "pgvector"]
 
 DEFAULT_MODELS: dict[str, str] = {
     "groq": "llama-3.1-8b-instant",
@@ -74,6 +75,11 @@ class Settings(BaseSettings):
     chunk_overlap: int = 150
     default_top_k: int = 4
     request_timeout: float = 60.0
+
+    # Vector store (backend behind the VectorStore interface)
+    vector_store: VectorStoreName = "memory"
+    pgvector_dsn: str | None = None  # postgresql://user:pass@host:5432/db
+    pgvector_table: str = "mcp_vectors"
 
     def resolved_llm_model(self) -> str:
         return self.llm_model or DEFAULT_MODELS[self.llm_provider]

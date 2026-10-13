@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from mcp_tool_suite.config import Settings
 from mcp_tool_suite.providers.base import ChatMessage, EmbeddingProvider, LLMProvider
 from mcp_tool_suite.services.documents import chunk_text, load_text
-from mcp_tool_suite.services.vectorstore import Hit, InMemoryVectorStore
+from mcp_tool_suite.services.vectorstore import Hit, VectorStore
 
 _ANSWER_SYSTEM = (
     "You are a precise retrieval assistant. Answer ONLY from the provided context. "
@@ -38,7 +38,7 @@ class RagService:
         settings: Settings,
         llm: LLMProvider,
         embedder: EmbeddingProvider,
-        store: InMemoryVectorStore,
+        store: VectorStore,
     ) -> None:
         self.settings = settings
         self.llm = llm

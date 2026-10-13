@@ -8,10 +8,9 @@ from pathlib import Path
 from typing import Any
 
 from mcp_tool_suite.config import Settings, get_settings
-from mcp_tool_suite.context import AppContext, build_context
+from mcp_tool_suite.context import AppContext, build_context, build_vector_store
 from mcp_tool_suite.providers.router import build_embedder, build_llm
 from mcp_tool_suite.services.rag import RagService
-from mcp_tool_suite.services.vectorstore import InMemoryVectorStore
 from mcp_tool_suite.tools.rag_tools import DocumentQaTool, SemanticSearchTool
 
 from evals.testset import EvalSample, load_eval_samples
@@ -47,7 +46,7 @@ class PerToolEvaluator:
         self.settings = ctx.settings
         self.llm = build_llm(self.settings)
         self.embedder = build_embedder(self.settings)
-        self.store = InMemoryVectorStore(persist_dir=self.settings.data_dir)
+        self.store = build_vector_store(self.settings, self.embedder)
         self.rag = RagService(self.settings, self.llm, self.embedder, self.store)
 
     async def index_sample(self, sample: EvalSample) -> None:

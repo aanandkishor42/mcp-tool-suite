@@ -62,6 +62,7 @@ def build_http_app(settings: Settings | None = None) -> Any:
                 "transport": settings.transport,
                 "llm_provider": settings.llm_provider,
                 "embed_provider": settings.embed_provider,
+                "vector_store": settings.vector_store,
                 "auth_mode": settings.auth_mode,
                 "tools": tool_names,
             }

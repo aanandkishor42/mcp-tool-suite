@@ -11,3 +11,25 @@ services:
     volumes:
       - ./data:/data/index
     restart: unless-stopped
+
+  # Optional Postgres + pgvector. Start with: docker compose --profile pgvector up
+  # Then set VECTOR_STORE=pgvector and PGVECTOR_DSN=postgresql://postgres:mcp@db:5432/mcp
+  db:
+    image: pgvector/pgvector:pg17
+    profiles: ["pgvector"]
+    environment:
+      POSTGRES_PASSWORD: mcp
+      POSTGRES_DB: mcp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:

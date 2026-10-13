@@ -75,6 +75,27 @@ python run.py
 | `anthropic` | paid | Claude Messages API |
 | `hashing` (embeddings) | yes | offline, deterministic — good for demos/tests |
 
+### Vector store
+
+Retrieval uses an in-process store by default. For production, switch to Postgres +
+**pgvector** (`VECTOR_STORE=pgvector`) behind the same `VectorStore` interface:
+
+```powershell
+pip install "mcp-tool-suite[pgvector]"
+# a Postgres with the vector extension, e.g.:
+# docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=mcp pgvector/pgvector:pg17
+$env:VECTOR_STORE="pgvector"; $env:PGVECTOR_DSN="postgresql://postgres:mcp@localhost:5432/postgres"
+python run.py
+```
+
+| `VECTOR_STORE` | Backing | Notes |
+|---|---|---|
+| `memory` (default) | numpy + optional disk persistence | zero dependencies, offline |
+| `pgvector` | Postgres + `pgvector` | shared, durable, scales; needs `PGVECTOR_DSN` |
+
+The embedding dimension is taken from the active embedder, so switch
+`EMBED_PROVIDER`/`EMBED_MODEL` together with the target database.
+
 ---
 
 ## Connect clients
@@ -244,7 +265,7 @@ docker compose up --build        # http://localhost:8000/mcp
 
 - [x] Tool suite: document/RAG + code review + data analysis + web research + report generator
 - [x] OAuth 2.1 authorization + resource server (RFC 8414/7591/7636/8707/9728, PKCE, JWT, refresh rotation)
-- [ ] Postgres + pgvector backend behind the `VectorStore` interface
+- [x] Postgres + pgvector backend behind the `VectorStore` interface (`VECTOR_STORE=pgvector`)
 - [ ] Long-running work as MCP **Tasks** (e.g. expensive report generation)
 - [ ] **MCP Apps** widgets for the usage/cost dashboard
 - [ ] More tools: email assistant, dashboard
