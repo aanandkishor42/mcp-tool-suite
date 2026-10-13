@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir /wheels/*.whl
 
 COPY pyproject.toml README.md ./
 COPY src ./src
-COPY run.py ./run.py 2>/dev/null || true
+RUN if [ -f run.py ]; then cp run.py /app/run.py; fi
 
 RUN mkdir -p /data/index && chown -R appuser:appgroup /app /data
 USER appuser
