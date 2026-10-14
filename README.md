@@ -1,5 +1,10 @@
 # MCP Tool Suite
 
+[![CI](https://github.com/aanandkishor42/mcp-tool-suite/actions/workflows/ci.yml/badge.svg)](https://github.com/aanandkishor42/mcp-tool-suite/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/aanandkishor42/mcp-tool-suite)](https://github.com/aanandkishor42/mcp-tool-suite/releases)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+
 A **multi-tool MCP server platform**: one remote server that exposes many
 AI-callable tools over the [Model Context Protocol](https://modelcontextprotocol.io).
 Connect it once to **Claude, ChatGPT, VS Code, Cursor or opencode** and every
@@ -327,6 +332,24 @@ docker compose up --build        # http://localhost:8000/mcp
 ```
 
 ---
+
+## Releasing
+
+Versioning follows [SemVer](https://semver.org), with releases driven by git tags
+(`vX.Y.Z`) and `.github/workflows/release.yml`:
+
+1. Bump `version` in `pyproject.toml` and add a dated entry to `CHANGELOG.md`.
+2. Commit, then tag and push: `git tag -a vX.Y.Z -m "..." && git push origin main vX.Y.Z`.
+3. Publish a GitHub Release for the tag — this triggers the workflow to build the
+   sdist/wheel, attach them to the release, and publish to PyPI.
+
+Publishing uses [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/)
+(OIDC — no API tokens). One-time setup on PyPI: add a **pending trusted publisher**
+for project `mcp-tool-suite` with owner `aanandkishor42`, repository
+`mcp-tool-suite`, workflow `release.yml`, and environment `pypi`. Until that is
+configured the `publish-pypi` job will fail (the build and attach jobs still
+succeed). You can also run the workflow manually via **Actions → Release → Run
+workflow** and pass an existing tag.
 
 ## Roadmap
 
