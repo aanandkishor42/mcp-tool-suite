@@ -12,8 +12,10 @@ from __future__ import annotations
 import hashlib
 import re
 import time
-from typing import Any, Awaitable, Callable
+from collections.abc import Awaitable, Callable
+from typing import Any
 
+from evals.testset import EvalSample
 from mcp_tool_suite.context import AppContext
 from mcp_tool_suite.services.documents import chunk_text
 from mcp_tool_suite.tools import (
@@ -27,8 +29,6 @@ from mcp_tool_suite.tools import (
     UsageStatsTool,
     WebResearchTool,
 )
-
-from evals.testset import EvalSample
 
 _WORD_RE = re.compile(r"[a-z0-9][a-z0-9_\-]+")
 

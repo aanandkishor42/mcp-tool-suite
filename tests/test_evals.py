@@ -3,8 +3,6 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from mcp_tool_suite.context import build_context
-
 from evals.evaluators import (
     TOOL_EVALUATORS,
     OfflineMetrics,
@@ -12,6 +10,7 @@ from evals.evaluators import (
 )
 from evals.runner import PerToolEvaluator, aggregate
 from evals.testset import EvalSample, load_eval_samples
+from mcp_tool_suite.context import build_context
 
 _SAMPLE_FILE = Path(__file__).resolve().parents[1] / "evals" / "data" / "sample.json"
 

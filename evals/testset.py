@@ -26,7 +26,7 @@ class EvalSample(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "EvalSample":
+    def from_dict(cls, data: dict[str, Any]) -> EvalSample:
         return cls(
             question=data["question"].strip(),
             reference=(data.get("reference") or "").strip(),

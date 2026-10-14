@@ -19,10 +19,9 @@ import asyncio
 import time
 from pathlib import Path
 
-from mcp_tool_suite.context import build_context
-
 from evals.runner import PerToolEvaluator
 from evals.testset import load_eval_samples, save_eval_results
+from mcp_tool_suite.context import build_context
 
 
 async def _run() -> None:

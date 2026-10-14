@@ -18,10 +18,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_tool_suite.context import AppContext
-
 from evals.evaluators import OfflineMetrics, evaluate_sample
 from evals.testset import EvalSample
+from mcp_tool_suite.context import AppContext
 
 __all__ = ["PerToolEvaluator", "OfflineMetrics"]
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import re
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
 

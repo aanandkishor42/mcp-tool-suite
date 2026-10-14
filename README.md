@@ -4,6 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/aanandkishor42/mcp-tool-suite)](https://github.com/aanandkishor42/mcp-tool-suite/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 A **multi-tool MCP server platform**: one remote server that exposes many
 AI-callable tools over the [Model Context Protocol](https://modelcontextprotocol.io).
@@ -247,9 +248,12 @@ Register it in `tools/__init__.py::default_plugins` — that's it.
 ```powershell
 pip install -e ".[dev]"
 pytest -q
+ruff check .
 ```
 
 Tests run fully offline (fake LLM + hashing embeddings + in-memory vectors).
+Lint runs with [Ruff](https://docs.astral.sh/ruff/) (`E`, `F`, `I`, `UP`, `B` at a
+120-column width) and is enforced by a dedicated CI job.
 
 
 ## Evaluation

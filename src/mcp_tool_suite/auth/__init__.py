@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from mcp_tool_suite.auth.bearer import BearerAuthMiddleware
+from mcp_tool_suite.auth.bearer import BearerAuthMiddleware as BearerAuthMiddleware
 from mcp_tool_suite.auth.middleware import OAuth2ResourceServerMiddleware
 from mcp_tool_suite.auth.routes import OAuthContext, build_auth_routes
 from mcp_tool_suite.auth.store import OAuthStore
@@ -75,7 +75,7 @@ class OAuth2Server:
         refresh_ttl: int | None = 2592000,
         demo_user: str | None = None,
         demo_password: str | None = None,
-    ) -> "OAuth2Server":
+    ) -> OAuth2Server:
         return OAuth2Server(
             data_dir=data_dir,
             issuer=issuer,
@@ -89,7 +89,7 @@ class OAuth2Server:
     def close(self) -> None:
         self.store.close()
 
-    def __enter__(self) -> "OAuth2Server":
+    def __enter__(self) -> OAuth2Server:
         return self
 
     def __exit__(self, *exc) -> None:

@@ -11,7 +11,8 @@ from __future__ import annotations
 
 import functools
 import time
-from typing import Any, Awaitable, Callable, Protocol, Sequence
+from collections.abc import Awaitable, Callable, Sequence
+from typing import Any, Protocol
 
 from mcp_tool_suite.context import AppContext
 

@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- **Linting:** [Ruff](https://docs.astral.sh/ruff/) (`E`, `F`, `I`, `UP`, `B` at a
+  120-column width) with a dedicated `lint` CI job, and fixed every existing
+  violation (import sorting, `collections.abc` imports, `datetime.UTC`,
+  `raise ... from None`, explicit `zip(strict=...)`, unused imports).
+
 ## 0.1.1 - 2026-10-14
 
 ### Fixed

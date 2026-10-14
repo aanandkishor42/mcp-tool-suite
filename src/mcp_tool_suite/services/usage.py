@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Sequence
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from threading import Lock
 from typing import Any
 
@@ -45,7 +45,7 @@ class UsageTracker:
     def __init__(self, prices: dict[str, tuple[float, float]] | None = None) -> None:
         self._lock = Lock()
         self._prices = dict(prices or DEFAULT_PRICES)
-        self.started_at = datetime.now(timezone.utc).isoformat()
+        self.started_at = datetime.now(UTC).isoformat()
         self.tool_calls: dict[str, dict[str, Any]] = {}
         self.llm_calls: dict[str, dict[str, Any]] = {}
         self.totals: dict[str, Any] = {

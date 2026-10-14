@@ -194,7 +194,7 @@ class TasksExtension(Extension):
         else:
             self.store.complete(task_id, result)
 
-    def _on_runner_done(self, task_id: str, runner: "asyncio.Task[None]") -> None:
+    def _on_runner_done(self, task_id: str, runner: asyncio.Task[None]) -> None:
         self._runners.pop(task_id, None)
         # Retrieve the exception so asyncio does not warn about it going unread.
         if not runner.cancelled() and runner.exception() is not None:

@@ -68,7 +68,7 @@ async def _form(request: Request) -> dict[str, str]:
     try:
         form = await request.form()
     except Exception:
-        raise OAuthError(400, "invalid_request", "Body must be form-encoded")
+        raise OAuthError(400, "invalid_request", "Body must be form-encoded") from None
     return {key: (value if isinstance(value, str) else value.filename or "") for key, value in form.multi_items()}
 
 
@@ -169,7 +169,7 @@ async def register(request: Request) -> JSONResponse:
     try:
         body = await request.json()
     except Exception:
-        raise OAuthError(400, "invalid_client_metadata", "Request body must be JSON")
+        raise OAuthError(400, "invalid_client_metadata", "Request body must be JSON") from None
 
     redirect_uris = body.get("redirect_uris")
     if not isinstance(redirect_uris, list) or not redirect_uris:
@@ -344,7 +344,7 @@ async def _token_refresh(ctx: OAuthContext, form: dict[str, str]) -> JSONRespons
     try:
         record, revoked = ctx.store.get_refresh(raw)
     except KeyError:
-        raise OAuthError(400, "invalid_grant", "Unknown refresh token")
+        raise OAuthError(400, "invalid_grant", "Unknown refresh token") from None
     if revoked:
         raise OAuthError(400, "invalid_grant", "Refresh token revoked")
     if record.client_id != client.client_id:

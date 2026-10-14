@@ -7,7 +7,7 @@ three expose the same ``/chat/completions`` and ``/embeddings`` shape. Only
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import httpx
 

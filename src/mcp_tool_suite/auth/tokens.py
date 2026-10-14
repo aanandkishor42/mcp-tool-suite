@@ -11,7 +11,7 @@ import base64
 import hashlib
 import hmac
 import secrets
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import jwt
@@ -64,7 +64,7 @@ def mint_jwt(
     ttl_seconds: int,
 ) -> tuple[str, dict]:
     """Return (jwt, claims). The token's ``aud`` is bound to *audience* (RFC 8707)."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     claims = {
         "iss": issuer,
         "aud": audience,

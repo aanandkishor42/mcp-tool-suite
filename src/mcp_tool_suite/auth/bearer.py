@@ -8,7 +8,8 @@ compared in constant time. For real deployments use ``auth_mode="oauth2"`` (see
 from __future__ import annotations
 
 import hmac
-from typing import Any, Awaitable, Callable, MutableMapping
+from collections.abc import Awaitable, Callable, MutableMapping
+from typing import Any
 
 Scope = MutableMapping[str, Any]
 Message = MutableMapping[str, Any]

@@ -17,7 +17,7 @@ from __future__ import annotations
 import time
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from threading import Lock
 from typing import Any
 
@@ -30,7 +30,7 @@ DEFAULT_TTL_MS = 3_600_000
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 @dataclass

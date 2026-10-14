@@ -6,7 +6,7 @@ import json
 import sqlite3
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 from mcp_tool_suite.auth.tokens import hash_secret, random_token, verify_secret

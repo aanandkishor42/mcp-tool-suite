@@ -9,7 +9,7 @@ pgvector's cosine distance (``<=>``), so scores match ``InMemoryVectorStore``.
 from __future__ import annotations
 
 import re
-from typing import Sequence
+from collections.abc import Sequence
 
 import psycopg
 from pgvector import Vector
@@ -82,7 +82,7 @@ class PgVectorStore:
         metas = metadatas or [{}] * len(ids)
         rows = [
             (collection, str(doc_id), text, Jsonb(meta or {}), Vector(list(vec)))
-            for doc_id, text, vec, meta in zip(ids, texts, vectors, metas)
+            for doc_id, text, vec, meta in zip(ids, texts, vectors, metas, strict=True)
         ]
         with psycopg.connect(self._dsn, autocommit=True) as conn:
             register_vector(conn)
